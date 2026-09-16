@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OMI GAMING</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,sans-serif;background:#02030a;color:#fff}
+body{overflow-x:hidden}
+
+/* GAMING BACKGROUND */
+body:before{
+  content:"";
+  position:fixed;inset:0;z-index:-3;
+  background:
+    radial-gradient(circle at 50% 20%,#17235f 0,#070b20 35%,#02030a 75%);
+}
+body:after{
+  content:"";
+  position:fixed;inset:0;z-index:-2;
+  background:
+    linear-gradient(rgba(0,220,255,.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,220,255,.08) 1px,transparent 1px);
+  background-size:45px 45px;
+  animation:gridMove 8s linear infinite;
+}
+@keyframes gridMove{
+  from{transform:translateY(0)}
+  to{transform:translateY(45px)}
+}
+
+.particle{
+  position:fixed;width:3px;height:3px;border-radius:50%;
+  background:#00eaff;box-shadow:0 0 12px #00eaff;
+  opacity:.7;z-index:-1;animation:float 7s linear infinite;
+}
+@keyframes float{
+  from{transform:translateY(110vh);opacity:0}
+  20%{opacity:1}
+  to{transform:translateY(-10vh);opacity:0}
+}
+
+.hidden{display:none!important}
+
+/* LOGIN */
+#loginPage{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+.loginBox{
+  width:100%;max-width:390px;padding:30px 22px;text-align:center;
+  background:rgba(5,8,25,.88);
+  border:1px solid #00eaff;
+  border-radius:24px;
+  box-shadow:0 0 25px #006dff, inset 0 0 25px rgba(0,234,255,.08);
+}
+.logo{
+  font-size:38px;font-weight:900;letter-spacing:4px;
+  color:#00eaff;text-shadow:0 0 18px #00eaff;
+}
+.subtitle{color:#8fa8c9;margin:8px 0 25px}
+input,select{
+  width:100%;padding:15px;margin:8px 0;
+  border-radius:12px;border:1px solid #246cff;
+  background:#050817;color:#fff;outline:none;
+}
+button{
+  border:0;cursor:pointer;color:#fff;font-weight:800;
+}
+.loginBtn{
+  width:100%;padding:15px;margin-top:12px;border-radius:12px;
+  background:linear-gradient(90deg,#006cff,#00d9ff);
+  box-shadow:0 0 20px rgba(0,217,255,.55);
+}
+#error{color:#ff405d;font-weight:bold;margin-top:12px}
+#lock{color:#ffd23f;margin-top:10px;font-weight:bold}
+
+/* APP */
+#app{min-height:100vh;padding:18px 14px 40px}
+.topbar{
+  max-width:1100px;margin:auto;display:flex;
+  align-items:center;justify-content:space-between;
+  gap:10px;margin-bottom:20px;
+}
+.brand{font-size:25px;font-weight:900;color:#00eaff;text-shadow:0 0 12px #00eaff}
+.status{
+  padding:8px 12px;border:1px solid #14ff91;border-radius:20px;
+  color:#14ff91;font-size:12px;
+}
+
+/* PAGES */
+.page{display:none;max-width:1100px;margin:auto}
+.page.active{display:block}
+
+.dashboardTitle{text-align:center;margin:8px 0 25px}
+.dashboardTitle h1{font-size:30px;margin:0;color:#fff;text-shadow:0 0 15px #00eaff}
+.dashboardTitle p{color:#8196b8}
+
+.hud{
+  width:min(88vw,430px);height:min(88vw,430px);
+  max-width:430px;max-height:430px;
+  margin:0 auto 30px;position:relative;
+  border-radius:50%;
+  border:2px solid #00eaff;
+  box-shadow:0 0 25px #006dff,0 0 70px rgba(0,234,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle,#07143c 0,#030615 65%,#02030a 100%);
+}
+.hud:before,.hud:after{
+  content:"";position:absolute;border-radius:50%;
+  border:1px dashed #3477ff;
+}
+.hud:before{inset:28px;animation:spin 12s linear infinite}
+.hud:after{inset:65px;border-color:#00eaff;animation:spin 8s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.ring{
+  position:absolute;inset:12px;border-radius:50%;
+  border:1px solid rgba(0,234,255,.4);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  50%{transform:scale(1.04);box-shadow:0 0 30px #00eaff}
+}
+
+.stat{
+  position:absolute;font-size:11px;color:#8fdfff;text-align:center;
+}
+.stat b{display:block;color:#fff;font-size:15px;margin-top:3px}
+.cpu{top:65px;left:50%;transform:translateX(-50%)}
+.gpu{right:35px;top:50%;transform:translateY(-50%)}
+.ram{bottom:28px;left:50%;transform:translateX(-50%);z-index:1}
+.board{left:35px;top:50%;transform:translateY(-50%)}
+
+.startWrap{text-align:center;z-index:2}
+.omi-start{
+  width:135px;height:135px;border-radius:50%;
+  background:radial-gradient(circle,#12dfff,#0751ff 65%,#021344);
+  border:3px solid #9df7ff;
+  box-shadow:0 0 20px #00eaff,0 0 55px #0751ff;
+  font-size:22px;
+  transition:.25s;
+}
+.omi-start:active{transform:scale(.92)}
+.hud.activated{animation:hudPower .7s infinite alternate}
+@keyframes hudPower{
+  from{box-shadow:0 0 25px #006dff}
+  to{box-shadow:0 0 55px #00eaff,0 0 100px #0751ff}
+}
+
+.startText{margin-top:10px;color:#00eaff;font-size:11px;letter-spacing:1.5px;position:relative;z-index:5}
+
+.flash{
+  position:fixed;inset:0;background:#fff;z-index:50;
+  opacity:0;pointer-events:none;
+}
+.flash.on{animation:flash .65s ease}
+@keyframes flash{
+  0%{opacity:0}
+  15%{opacity:.9}
+  100%{opacity:0}
+}
+
+.activateText{
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:51;font-size:clamp(22px,6vw,48px);font-weight:900;
+  color:#fff;text-align:center;text-shadow:0 0 20px #00eaff;
+  opacity:0;pointer-events:none;white-space:nowrap;
+}
+.activateText.show{animation:activate .9s ease}
+@keyframes activate{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+  30%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.25)}
+}
+
+.actionRow{
+  display:none;max-width:600px;margin:0 auto 25px;
+  grid-template-columns:1fr 1fr;gap:12px;
+}
+.actionRow.show{display:grid}
+.action{
+  padding:17px;border-radius:14px;
+  background:linear-gradient(135deg,#081a42,#07102a);
+  border:1px solid #00eaff;
+  box-shadow:0 0 15px rgba(0,234,255,.18);
+  font-size:15px;
+}
+.action.open{background:linear-gradient(135deg,#005bff,#00cfff)}
+.action.clear{background:linear-gradient(135deg,#102c21,#087c51)}
+
+.options{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:12px;max-width:850px;margin:auto;
+}
+.option{
+  padding:20px 12px;border-radius:17px;text-align:center;
+  background:rgba(5,11,31,.88);
+  border:1px solid #2453a8;
+  box-shadow:0 0 14px rgba(0,80,255,.12);
+  transition:.2s;
+}
+.option:active{transform:scale(.97)}
+.option span{display:block;font-size:28px;margin-bottom:7px}
+.option b{font-size:14px}
+
+.panel{
+  background:rgba(4,8,24,.92);border:1px solid #1267d9;
+  border-radius:20px;padding:22px;
+  box-shadow:0 0 25px rgba(0,100,255,.2);
+}
+.panel h2{color:#00eaff;margin-top:0}
+.back{
+  padding:11px 18px;border-radius:10px;background:#102452;
+  border:1px solid #367cff;margin-bottom:18px;
+}
+.result{
+  margin-top:15px;padding:16px;border-radius:14px;
+  background:#050b1e;border:1px solid #234c8e;
+}
+.value{
+  display:flex;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid #182d55;
+}
+.value b{color:#00eaff}
+.searchBtn,.mainBtn{
+  padding:13px 18px;border-radius:11px;
+  background:linear-gradient(90deg,#0754ff,#00cfff);
+  margin-top:8px;
+}
+.switch{
+  width:70px;height:35px;border-radius:20px;background:#333;
+  position:relative;cursor:pointer;margin:15px 0;
+}
+.switch:after{
+  content:"";position:absolute;width:27px;height:27px;
+  border-radius:50%;background:#fff;top:4px;left:4px;transition:.2s;
+}
+.switch.on{background:#00c878}
+.switch.on:after{left:39px}
+
+.chat{
+  height:330px;overflow:auto;padding:10px;
+  background:#02050f;border-radius:14px;margin-bottom:10px;
+}
+.msg{padding:10px;margin:8px 0;border-radius:12px;max-width:85%}
+.msg.user{margin-left:auto;background:#064dbb}
+.msg.bot{background:#132039}
+.chatInput{display:flex;gap:8px}
+.chatInput input{margin:0}
+
+.telegram{
+  position:fixed;right:15px;bottom:18px;
+  width:58px;height:58px;border-radius:50%;
+  background:#229ed9;display:flex;align-items:center;justify-content:center;
+  font-size:29px;text-decoration:none;color:white;
+  box-shadow:0 0 18px #229ed9,0 0 35px rgba(34,158,217,.5);
+  z-index:30;
+}
+
+@media(max-width:600px){
+  .options{grid-template-columns:1fr 1fr}
+  .option{padding:17px 8px}
+  .option span{font-size:24px}
+  .hud{margin-bottom:25px}
+}
+
+.omi-start{font-size:0!important}
+.omi-start span{font-size:28px!important;color:#fff!important;text-shadow:0 0 15px #00eaff!important}
+.omi-start:first-letter{font-size:52px!important}
+</style>
+
+<style>
+@media(max-width:600px){
+  .startText{
+    margin-top:14px !important;
+    font-size:10px !important;
+    letter-spacing:1.2px !important;
+  }
+  .ram{
+    bottom:22px !important;
+  }
+  .omi-start{
+    transform:scale(.94);
+  }
+}
+</style>
+
+<style>
+/* OMI GAMING — NEW CIRCULAR DASHBOARD */
+.hud{
+  width:min(92vw,520px)!important;
+  height:min(92vw,520px)!important;
+  margin:20px auto 35px!important;
+  border:3px solid #00eaff!important;
+  background:radial-gradient(circle,#071a46 0%,#030817 62%,#01040d 100%)!important;
+  box-shadow:0 0 25px #00eaff,0 0 70px rgba(0,170,255,.45),inset 0 0 45px rgba(0,170,255,.18)!important;
+  overflow:hidden;
+}
+
+.hud:before{
+  inset:7%!important;
+  border:2px dashed #3477ff!important;
+  animation:spin 18s linear infinite!important;
+}
+.hud:after{
+  inset:19%!important;
+  border:2px dashed #00d9ff!important;
+  animation:spin 12s linear infinite reverse!important;
+}
+
+.ring{
+  inset:27%!important;
+  border:4px solid #9df7ff!important;
+  box-shadow:0 0 25px #00eaff,inset 0 0 25px rgba(0,234,255,.25)!important;
+  animation:pulse 2s infinite!important;
+}
+
+.stat{
+  font-size:18px!important;
+  color:#a9eaff!important;
+  text-shadow:0 0 10px #00cfff;
+  z-index:5!important;
+}
+.stat b{
+  font-size:25px!important;
+  color:#fff!important;
+  margin-top:8px!important;
+  text-shadow:0 0 14px #00eaff;
+}
+
+.cpu{top:11%!important;left:50%!important;transform:translateX(-50%)!important}
+.gpu{right:10%!important;top:50%!important;transform:translateY(-50%)!important}
+.board{left:10%!important;top:50%!important;transform:translateY(-50%)!important}
+.ram{bottom:10%!important;left:50%!important;transform:translateX(-50%)!important}
+
+.startWrap{
+  position:relative!important;
+  z-index:10!important;
+  text-align:center!important;
+}
+
+.omi-start{
+  width:175px!important;
+  height:175px!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle,#159cff 0%,#0754ff 70%,#06218c 100%)!important;
+  border:4px solid #b8fbff!important;
+  box-shadow:0 0 25px #00eaff,0 0 60px rgba(0,150,255,.8),inset 0 0 30px rgba(255,255,255,.15)!important;
+  font-size:30px!important;
+}
+
+.startText{
+  margin-top:14px!important;
+  font-size:13px!important;
+  letter-spacing:3px!important;
+  color:#00eaff!important;
+  text-shadow:0 0 12px #00eaff!important;
+}
+
+@media(max-width:600px){
+  .hud{
+    width:92vw!important;
+    height:92vw!important;
+    max-width:430px!important;
+    max-height:430px!important;
+  }
+  .omi-start{
+    width:145px!important;
+    height:145px!important;
+    font-size:25px!important;
+  }
+  .stat{
+    font-size:14px!important;
+  }
+  .stat b{
+    font-size:20px!important;
+  }
+}
+</style>
+
+<style>
+/* OMI GAMING DASHBOARD — CLEAN V2 */
+.hud{
+  width:min(92vw,500px)!important;
+  height:min(92vw,500px)!important;
+  margin:15px auto 30px!important;
+  background:radial-gradient(circle,#071b4d 0%,#030a1c 58%,#01040d 100%)!important;
+  border:3px solid #00eaff!important;
+  box-shadow:0 0 22px #00eaff,0 0 65px rgba(0,180,255,.42),inset 0 0 45px rgba(0,180,255,.15)!important;
+}
+
+.hud:before{
+  inset:8%!important;
+  border:2px dashed #326dff!important;
+  animation:spin 20s linear infinite!important;
+}
+.hud:after{
+  inset:18%!important;
+  border:2px dashed #00d9ff!important;
+  animation:spin 14s linear infinite reverse!important;
+}
+
+.ring{
+  inset:25%!important;
+  border:3px solid #9df7ff!important;
+  box-shadow:0 0 28px #00eaff,inset 0 0 25px rgba(0,234,255,.25)!important;
+}
+
+.stat{
+  z-index:20!important;
+  font-size:16px!important;
+  line-height:1.2!important;
+  color:#a8eaff!important;
+  text-shadow:0 0 10px #00d9ff!important;
+}
+.stat b{
+  display:block!important;
+  margin-top:6px!important;
+  font-size:22px!important;
+  color:#fff!important;
+  text-shadow:0 0 14px #00eaff!important;
+}
+
+.cpu{
+  top:8%!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+}
+.gpu{
+  top:50%!important;
+  right:7%!important;
+  transform:translateY(-50%)!important;
+}
+.board{
+  top:50%!important;
+  left:7%!important;
+  transform:translateY(-50%)!important;
+}
+.ram{
+  bottom:8%!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+}
+
+.startWrap{
+  position:absolute!important;
+  inset:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  z-index:30!important;
+}
+
+.omi-start{
+  width:170px!important;
+  height:170px!important;
+  border:4px solid #b8fbff!important;
+  background:radial-gradient(circle,#159cff,#0754ff 65%,#061b80)!important;
+  box-shadow:0 0 25px #00eaff,0 0 60px rgba(0,150,255,.75),inset 0 0 30px rgba(255,255,255,.12)!important;
+  font-size:28px!important;
+}
+
+.startText{
+  margin-top:18px!important;
+  font-size:12px!important;
+  letter-spacing:2px!important;
+  color:#00eaff!important;
+  text-shadow:0 0 12px #00eaff!important;
+  z-index:35!important;
+}
+
+/* BOT — MOVE HIGHER */
+.omi-telegram-bot{
+  right:14px!important;
+  bottom:155px!important;
+  width:58px!important;
+  height:58px!important;
+  font-size:29px!important;
+  z-index:99999!important;
+}
+
+@media(max-width:600px){
+  .hud{
+    width:92vw!important;
+    height:92vw!important;
+    max-width:430px!important;
+    max-height:430px!important;
+  }
+  .omi-start{
+    width:145px!important;
+    height:145px!important;
+    font-size:24px!important;
+  }
+  .stat{
+    font-size:13px!important;
+  }
+  .stat b{
+    font-size:19px!important;
+  }
+  .omi-telegram-bot{
+    bottom:145px!important;
+  }
+  .startText{
+    margin-top:15px!important;
+    font-size:10px!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="particle" style="left:10%;animation-delay:0s"></div>
+<div class="particle" style="left:25%;animation-delay:2s"></div>
+<div class="particle" style="left:45%;animation-delay:4s"></div>
+<div class="particle" style="left:65%;animation-delay:1s"></div>
+<div class="particle" style="left:82%;animation-delay:3s"></div>
+
+<!-- LOGIN PAGE ONLY -->
+<section id="loginPage">
+  <div class="loginBox">
+    <div class="logo">OMI</div>
+    <div class="subtitle">GAMING CONTROL PANEL</div>
+
+    <input id="username" type="text" placeholder="Username" autocomplete="off">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="loginBtn" onclick="login()">LOGIN</button>
+
+    <div id="error"></div>
+    <div id="lock"></div>
+  </div>
+</section>
+
+<!-- APP -->
+<div id="app" class="hidden">
+
+  <div class="topbar">
+    <div class="brand">OMI GAMING</div>
+    <div class="status">● SYSTEM READY</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section id="home" class="page active">
+    <div class="dashboardTitle">
+      <h1>GAMING COMMAND CENTER</h1>
+      <p>SAFE GAMING CONTROL</p>
+    </div>
+
+    <div class="hud" id="hud">
+      <div class="ring"></div>
+
+      <div class="stat cpu">CPU<b>READY</b></div>
+      <div class="stat gpu">GPU<b>READY</b></div>
+      <div class="stat ram">RAM<b>OPTIMIZED</b></div>
+      <div class="stat board">BOARD<b>ONLINE</b></div>
+
+      <div class="startWrap">
+        <button class="omi-start" onclick="startGaming()">🎮<br>START</button>
+        <div class="startText">ACTIVATE GAMING MODE</div>
+      </div>
+    </div>
+
+    <div class="actionRow" id="gameActions">
+      <button class="action open" onclick="openGame()">🎮 OPEN GAME</button>
+      <button class="action clear" onclick="clearGame()">🧹 CLEAR GAME</button>
+    </div>
+
+    <div class="options">
+      <button class="option" onclick="openPage('device')"><span>🎯</span><b>Device Sensitivity</b></button>
+      <button class="option" onclick="openPage('performance')"><span>⚡</span><b>Performance</b></button>
+      <button class="option" onclick="openPage('cleanup')"><span>🧹</span><b>Safe Cleanup</b></button>
+      <button class="option" onclick="openPage('network')"><span>📶</span><b>Network</b></button>
+      <button class="option" onclick="openPage('temperature')"><span>🌡️</span><b>Temperature</b></button>
+      <button class="option" onclick="openPage('report')"><span>🚨</span><b>Report Hacker</b></button>
+      <button class="option" onclick="openPage('ai')"><span>🤖</span><b>OMI AI</b></button>
+    </div>
+  </section>
+
+  <!-- DEVICE -->
+  <section id="device" class="page">
+    <div class="panel">
+      <button class="back" onclick="goHome()">← BACK</button>
+      <h2>🎯 DEVICE SENSITIVITY</h2>
+      <p>Search your phone model for a recommended starting preset.</p>
+      <input id="deviceSearch" placeholder="Example: Vivo V60">
+      <button class="searchBtn" onclick="findDevice()">SEARCH DEVICE</button>
+      <div id="deviceResult"></div>
+    </div>
+  </section>
+
+  <!-- PERFORMANCE -->
+  <section id="performance" class="page">
+    <div class="panel">
+      <button class="back" onclick="goHome()">← BACK</button>
+      <h2>⚡ PERFORMANCE</h2>
+      <p>Safe browser-side gaming checklist.</p>
+      <div class="switch" id="perfSwitch" onclick="togglePerformance()"></div>
+      <div id="perfResult">🔴 HIGH PERFORMANCE MODE OFF</div>
+    </div>
+  </section>
+
+  <!-- CLEANUP -->
+  <section id="cleanup" class="page">
+    <div class="panel">
+      <button class="back" onclick="goHome()">← BACK</button>
+      <h2>🧹 SAFE CLEANUP</h2>
+      <p>Browser cannot directly clear another Android app's cache.</p>
+      <div class="switch" id="cleanSwitch" onclick="toggleCleanup()"></div>
+      <div id="cleanupResult">🔴 CLEANUP CHECK OFF</div>
+    </div>
+  </section>
+
+  <!-- NETWORK -->
+  <section id="network" class="page">
+    <div class="panel">
+      <button class="back" onclick="goHome()">← BACK</button>
+      <h2>📶 NETWORK</h2>
+      <button class="mainBtn" onclick="networkCheck()">REFRESH NETWORK</button>
+      <div class="result" id="networkResult">Press refresh to check connection.</div>
+    </div>
+  </section>
+
+  <!-- TEMPERATURE -->
+  <section id="temperature" class="page">
+    <div class="panel">
+      <button class="back" onclick="goHome()">← BACK</button>
+      <h2>🌡️ TEMPERATURE</h2>
+      <button class="mainBtn" onclick="temperatureCheck()">REFRESH CHECK</button>
+      <div class="result" id="temperatureResult">
+        🌡️ Real phone temperature is not available to a normal webpage.
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section id="report" class="page">
+    <div class="panel">
+      <button class="back" onclick="goHome()">← BACK</button>
+      <h2>🚨 REPORT HACKER</h2>
+      <input id="playerId" placeholder="Player ID">
+      <select id="reason">
+        <option>Cheating / Hack</option>
+        <option>Abusive Behaviour</option>
+        <option>Suspicious Activity</option>
+      </select>
+      <button class="mainBtn" onclick="prepareReport()">PREPARE REPORT</button>
+      <div id="reportResult"></div>
+    </div>
+  </section>
+
+  <!-- AI -->
+  <section id="ai" class="page">
+    <div class="panel">
+      <button class="back" onclick="goHome()">← BACK</button>
+      <h2>🤖 OMI AI</h2>
+
+      <div class="chat" id="chat">
+        <div class="msg bot">🤖 OMI AI online. Ask about sensitivity, performance, network or safe gaming.</div>
+      </div>
+
+      <div class="chatInput">
+        <input id="aiInput" placeholder="Ask OMI AI...">
+        <button class="mainBtn" onclick="askAI()">SEND</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<a class="telegram" href="https://t.me/OmiGamingOfficial_2610" target="_blank" aria-label="Telegram">✈️</a>
+
+<div class="flash" id="flash"></div>
+<div class="activateText" id="activateText">⚡ GAMING MODE ACTIVATED ⚡</div>
+
+<script>
+const USERNAME="Omi_gaming";
+const PASSWORD="omi_1234_5";
+
+let attempts=0;
+let locked=false;
+let timeLeft=120;
+let timer=null;
+
+function login(){
+  if(locked)return;
+
+  const u=document.getElementById("username").value.trim();
+  const p=document.getElementById("password").value;
+  const error=document.getElementById("error");
+
+  if(u!==USERNAME){
+    attempts++;
+    error.textContent="❌ WRONG USERNAME";
+  }else if(p!==PASSWORD){
+    attempts++;
+    error.textContent="❌ WRONG PASSWORD";
+  }else{
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    error.textContent="";
+    document.getElementById("lock").textContent="";
+    openPage("home");
+    return;
+  }
+
+  if(attempts>=3){
+    locked=true;
+    timeLeft=120;
+    startLock();
+  }
+}
+
+function startLock(){
+  const lock=document.getElementById("lock");
+  clearInterval(timer);
+
+  timer=setInterval(()=>{
+    lock.textContent="🔒 TOO MANY ATTEMPTS — TRY AGAIN IN "+timeLeft+"s";
+    timeLeft--;
+
+    if(timeLeft<0){
+      clearInterval(timer);
+      locked=false;
+      attempts=0;
+      timeLeft=120;
+      lock.textContent="";
+      document.getElementById("error").textContent="";
+    }
+  },1000);
+}
+
+function openPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const page=document.getElementById(id);
+  if(page)page.classList.add("active");
+  window.scrollTo(0,0);
+}
+
+function goHome(){
+  openPage("home");
+}
+
+function startGaming(){
+  const hud=document.getElementById("hud");
+  const flash=document.getElementById("flash");
+  const text=document.getElementById("activateText");
+  const actions=document.getElementById("gameActions");
+
+  hud.classList.add("activated");
+  flash.classList.remove("on");
+  text.classList.remove("show");
+
+  void flash.offsetWidth;
+
+  flash.classList.add("on");
+  text.classList.add("show");
+
+  setTimeout(()=>{
+    actions.classList.add("show");
+  },700);
+}
+
+function openGame(){
+  location.href="intent://#Intent;scheme=freefire;package=com.dts.freefireth;end";
+
+  setTimeout(()=>{
+    alert("🎮 If Free Fire did not open, launch it from your phone.");
+  },1200);
+}
+
+function clearGame(){
+  const el=document.getElementById("cleanupResult");
+  if(el){
+    el.innerHTML=
+      "<div style=\"text-align:center;padding:20px\">"+
+      "<div style=\"font-size:24px;color:#8fdfff\">🧹 SAFE GAME CLEANUP</div>"+
+      "<div style=\"font-size:18px;margin-top:18px\">🟢 CLEANUP CHECK READY</div>"+
+      "<div style=\"margin-top:15px\">✅ Unused apps close karo<br>✅ Storage free rakho<br>✅ Free Fire cache Android Settings se clear kar sakte ho</div>"+
+      "<div style=\"margin-top:15px;color:#8196b8;font-size:12px\">Website directly another app ka cache delete nahi kar sakti.</div>"+
+      "</div>";
+  }
+}
+
+const devices={
+  "samsung s25 ultra":[191,440,87,"46%"],
+  "samsung s25+":[186,480,91,"50%"],
+  "samsung s25":[180,450,88,"47%"],
+  "samsung s24 ultra":[180,480,91,"50%"],
+  "samsung s24+":[175,470,90,"49%"],
+  "samsung s24":[169,440,87,"46%"],
+  "samsung s23 ultra":[169,470,90,"49%"],
+  "samsung s23+":[164,460,89,"48%"],
+  "samsung s23":[158,480,91,"50%"],
+  "samsung s22 ultra":[158,460,89,"48%"],
+  "samsung s22+":[153,450,88,"47%"],
+  "samsung s22":[198,470,90,"49%"],
+  "samsung s21 ultra":[198,450,88,"47%"],
+  "samsung s21+":[193,440,87,"46%"],
+  "samsung s21":[187,460,89,"48%"],
+  "samsung s20 fe":[189,450,88,"47%"],
+  "samsung s20 ultra":[187,440,87,"46%"],
+  "samsung s20+":[182,480,91,"50%"],
+  "samsung s20":[176,450,88,"47%"],
+  "samsung s10":[166,440,87,"46%"],
+  "samsung s10+":[172,470,90,"49%"],
+  "samsung s10e":[154,450,88,"47%"],
+  "samsung a56 5g":[177,440,87,"46%"],
+  "samsung a55 5g":[166,480,91,"50%"],
+  "samsung a54 5g":[155,470,90,"49%"],
+  "samsung a53 5g":[195,460,89,"48%"],
+  "samsung a52s 5g":[171,450,88,"47%"],
+  "samsung a52 5g":[184,450,88,"47%"],
+  "samsung a51":[157,460,89,"48%"],
+  "samsung a36 5g":[157,470,90,"49%"],
+  "samsung a35 5g":[197,460,89,"48%"],
+  "samsung a34 5g":[186,450,88,"47%"],
+  "samsung a33 5g":[175,440,87,"46%"],
+  "samsung a25 5g":[187,450,88,"47%"],
+  "samsung a24":[160,460,89,"48%"],
+  "samsung a23 5g":[165,480,91,"50%"],
+  "samsung a22":[189,440,87,"46%"],
+  "samsung a15 5g":[177,440,87,"46%"],
+  "samsung a15":[161,460,89,"48%"],
+  "samsung a14 5g":[166,480,91,"50%"],
+  "samsung a14":[150,450,88,"47%"],
+  "samsung a13":[190,440,87,"46%"],
+  "samsung a12":[179,480,91,"50%"],
+  "samsung m56 5g":[183,460,89,"48%"],
+  "samsung m55 5g":[172,450,88,"47%"],
+  "samsung m54 5g":[161,440,87,"46%"],
+  "samsung m53 5g":[150,480,91,"50%"],
+  "samsung m52 5g":[190,470,90,"49%"],
+  "samsung m51":[163,480,91,"50%"],
+  "samsung m35 5g":[152,480,91,"50%"],
+  "samsung m34 5g":[192,470,90,"49%"],
+  "samsung m33 5g":[181,460,89,"48%"],
+  "samsung m32":[154,470,90,"49%"],
+  "samsung m31":[194,460,89,"48%"],
+  "samsung f55 5g":[160,480,91,"50%"],
+  "samsung f54 5g":[200,470,90,"49%"],
+  "samsung f34 5g":[180,450,88,"47%"],
+  "samsung f23 5g":[159,480,91,"50%"],
+  "samsung f22":[183,440,87,"46%"],
+  "samsung f15":[155,460,89,"48%"],
+  "samsung f14 5g":[160,480,91,"50%"],
+  "samsung f13":[184,440,87,"46%"],
+  "vivo v60":[152,470,90,"49%"],
+  "vivo v50":[196,460,89,"48%"],
+  "vivo v40":[189,450,88,"47%"],
+  "vivo v40 pro":[154,440,87,"46%"],
+  "vivo v30":[182,440,87,"46%"],
+  "vivo v30 pro":[198,430,86,"45%"],
+  "vivo v29":[196,470,90,"49%"],
+  "vivo v29 pro":[161,460,89,"48%"],
+  "vivo v27":[180,450,88,"47%"],
+  "vivo v27 pro":[196,440,87,"46%"],
+  "vivo v25":[164,430,86,"45%"],
+  "vivo v25 pro":[180,470,90,"49%"],
+  "vivo v23":[199,460,89,"48%"],
+  "vivo v23 pro":[164,450,88,"47%"],
+  "vivo v21":[183,440,87,"46%"],
+  "vivo v21e":[174,450,88,"47%"],
+  "vivo v20":[175,430,86,"45%"],
+  "vivo v20 pro":[191,470,90,"49%"],
+  "vivo v19":[189,460,89,"48%"],
+  "vivo v17":[173,440,87,"46%"],
+  "vivo v17 pro":[189,430,86,"45%"],
+  "vivo v15 pro":[173,460,89,"48%"],
+  "vivo y200":[166,440,87,"46%"],
+  "vivo y200e":[156,450,88,"47%"],
+  "vivo y100":[159,430,86,"45%"],
+  "vivo y100a":[160,450,88,"47%"],
+  "vivo y58":[176,470,90,"49%"],
+  "vivo y56 5g":[173,430,86,"45%"],
+  "vivo y39":[170,460,89,"48%"],
+  "vivo y38":[162,450,88,"47%"],
+  "vivo y36":[197,430,86,"45%"],
+  "vivo y35":[189,470,90,"49%"],
+  "vivo y28":[155,440,87,"46%"],
+  "vivo y27":[198,430,86,"45%"],
+  "vivo y22":[158,430,86,"45%"],
+  "vivo y21":[150,470,90,"49%"],
+  "vivo y20":[193,460,89,"48%"],
+  "vivo y19":[156,440,87,"46%"],
+  "vivo y18":[199,430,86,"45%"],
+  "vivo y17":[191,470,90,"49%"],
+  "vivo y16":[183,460,89,"48%"],
+  "vivo y15":[175,450,88,"47%"],
+  "vivo y12":[151,470,90,"49%"],
+  "vivo y11":[194,460,89,"48%"],
+  "vivo y10":[186,450,88,"47%"],
+  "vivo t3 pro":[198,430,86,"45%"],
+  "vivo t3":[194,440,87,"46%"],
+  "vivo t2 pro":[191,470,90,"49%"],
+  "vivo t2x":[178,430,86,"45%"],
+  "vivo t1 pro":[184,460,89,"48%"],
+  "iqoo 13":[182,470,90,"48%"],
+  "iqoo 12":[175,460,89,"47%"],
+  "iqoo 11":[168,450,88,"46%"],
+  "iqoo 10":[161,490,92,"50%"],
+  "iqoo neo 10":[185,480,91,"49%"],
+  "iqoo neo 9 pro":[185,470,90,"48%"],
+  "iqoo neo 9":[196,480,91,"49%"],
+  "iqoo neo 7 pro":[165,450,88,"46%"],
+  "iqoo neo 7":[176,460,89,"47%"],
+  "iqoo neo 6":[166,450,88,"46%"],
+  "iqoo z10":[174,460,89,"47%"],
+  "iqoo z10x":[183,460,89,"47%"],
+  "iqoo z9s pro":[170,450,88,"46%"],
+  "iqoo z9s":[154,460,89,"47%"],
+  "iqoo z9":[152,460,89,"47%"],
+  "iqoo z7 pro":[193,480,91,"49%"],
+  "iqoo z7":[189,490,92,"50%"],
+  "iqoo z6 pro":[186,470,90,"48%"],
+  "iqoo z6":[182,480,91,"49%"],
+  "iqoo z5":[175,470,90,"48%"],
+  "iqoo z3":[161,450,88,"46%"],
+  "iqoo z1":[198,480,91,"49%"],
+  "iqoo 9 pro":[171,480,91,"49%"],
+  "iqoo 9":[179,490,92,"50%"],
+  "iqoo 7 legend":[193,470,90,"48%"],
+  "oneplus 13":[151,450,88,"47%"],
+  "oneplus 13r":[181,440,87,"46%"],
+  "oneplus 12":[192,440,87,"46%"],
+  "oneplus 12r":[171,480,91,"50%"],
+  "oneplus 11":[182,480,91,"50%"],
+  "oneplus 11r":[161,470,90,"49%"],
+  "oneplus 10 pro":[161,460,89,"48%"],
+  "oneplus 10t":[173,480,91,"50%"],
+  "oneplus 10r":[151,460,89,"48%"],
+  "oneplus 9 pro":[200,460,89,"48%"],
+  "oneplus 9":[172,470,90,"49%"],
+  "oneplus 9r":[190,460,89,"48%"],
+  "oneplus 8t":[150,470,90,"49%"],
+  "oneplus 8 pro":[191,450,88,"47%"],
+  "oneplus 8":[163,460,89,"48%"],
+  "oneplus nord 5":[169,450,88,"47%"],
+  "oneplus nord 4":[155,440,87,"46%"],
+  "oneplus nord 3":[192,480,91,"50%"],
+  "oneplus nord 2t":[184,480,91,"50%"],
+  "oneplus nord 2":[178,470,90,"49%"],
+  "oneplus nord ce4":[151,440,87,"46%"],
+  "oneplus nord ce3":[186,480,91,"50%"],
+  "oneplus nord ce3 lite":[185,450,88,"47%"],
+  "oneplus nord ce2":[170,470,90,"49%"],
+  "oneplus nord ce2 lite":[169,440,87,"46%"],
+  "oneplus nord ce":[186,470,90,"49%"],
+  "oneplus nord n30 se":[199,440,87,"46%"],
+  "oneplus nord n20 se":[184,480,91,"50%"],
+  "oneplus nord n10":[175,440,87,"46%"],
+  "realme gt 7":[155,460,89,"48%"],
+  "realme gt 6":[195,450,88,"47%"],
+  "realme gt 5 pro":[185,430,86,"45%"],
+  "realme gt 5":[184,440,87,"46%"],
+  "realme gt neo 6":[185,440,87,"46%"],
+  "realme gt neo 5":[170,430,86,"45%"],
+  "realme gt neo 3":[191,460,89,"48%"],
+  "realme gt 2 pro":[152,450,88,"47%"],
+  "realme gt 2":[151,460,89,"48%"],
+  "realme 14 pro+":[178,430,86,"45%"],
+  "realme 14 pro":[188,450,88,"47%"],
+  "realme 14 5g":[157,440,87,"46%"],
+  "realme 13 pro+":[169,470,90,"49%"],
+  "realme 13 pro":[179,440,87,"46%"],
+  "realme 13+":[173,430,86,"45%"],
+  "realme 13 5g":[199,430,86,"45%"],
+  "realme 12 pro+":[160,460,89,"48%"],
+  "realme 12 pro":[170,430,86,"45%"],
+  "realme 12+":[164,470,90,"49%"],
+  "realme 12 5g":[190,470,90,"49%"],
+  "realme 11 pro+":[151,450,88,"47%"],
+  "realme 11 pro":[161,470,90,"49%"],
+  "realme 11x":[160,430,86,"45%"],
+  "realme 10 pro+":[193,440,87,"46%"],
+  "realme 10 pro":[152,460,89,"48%"],
+  "realme 10":[175,470,90,"49%"],
+  "realme 9 pro+":[178,440,87,"46%"],
+  "realme 9 pro":[180,460,89,"48%"],
+  "realme 9 se":[163,450,88,"47%"],
+  "realme 8 pro":[172,450,88,"47%"],
+  "realme 8":[156,460,89,"48%"],
+  "realme narzo 70 pro":[192,430,86,"45%"],
+  "realme narzo 70 turbo":[174,470,90,"49%"],
+  "realme narzo 70":[194,440,87,"46%"],
+  "realme narzo 60 pro":[178,470,90,"49%"],
+  "realme narzo 60":[180,430,86,"45%"],
+  "realme narzo 50 pro":[164,460,89,"48%"],
+  "realme narzo 50":[166,470,90,"49%"],
+  "realme narzo 30":[189,450,88,"47%"],
+  "realme c75":[199,470,90,"49%"],
+  "realme c65":[190,460,89,"48%"],
+  "realme c63":[170,440,87,"46%"],
+  "realme c55":[181,450,88,"47%"],
+  "realme c53":[161,430,86,"45%"],
+  "realme c51":[192,460,89,"48%"],
+  "realme c35":[163,430,86,"45%"],
+  "redmi note 14 pro+":[192,460,89,"48%"],
+  "redmi note 14 pro":[183,430,86,"45%"],
+  "redmi note 14":[158,440,87,"46%"],
+  "redmi note 13 pro+":[179,450,88,"47%"],
+  "redmi note 13 pro":[170,420,85,"44%"],
+  "redmi note 13":[196,430,86,"45%"],
+  "redmi note 12 pro+":[166,440,87,"46%"],
+  "redmi note 12 pro":[157,460,89,"48%"],
+  "redmi note 12":[183,420,85,"44%"],
+  "redmi note 11 pro+":[153,430,86,"45%"],
+  "redmi note 11 pro":[195,450,88,"47%"],
+  "redmi note 11":[170,460,89,"48%"],
+  "redmi note 10 pro":[182,440,87,"46%"],
+  "redmi note 10":[157,450,88,"47%"],
+  "redmi note 9 pro":[152,440,87,"46%"],
+  "redmi note 9":[190,450,88,"47%"],
+  "redmi note 8 pro":[191,430,86,"45%"],
+  "redmi note 8":[178,440,87,"46%"],
+  "redmi 13c 5g":[192,450,88,"47%"],
+  "redmi 13c":[195,420,85,"44%"],
+  "redmi 12 5g":[176,450,88,"47%"],
+  "redmi 12c":[187,460,89,"48%"],
+  "redmi 11 prime":[176,440,87,"46%"],
+  "redmi 10 prime":[168,430,86,"45%"],
+  "redmi 10 power":[177,440,87,"46%"],
+  "redmi 10a":[153,420,85,"44%"],
+  "redmi 9 power":[178,440,87,"46%"],
+  "redmi 9a":[187,420,85,"44%"],
+  "poco f7":[189,470,89,"48%"],
+  "poco f6 pro":[186,450,87,"46%"],
+  "poco f6":[182,460,88,"47%"],
+  "poco f5 pro":[179,490,91,"50%"],
+  "poco f5":[175,450,87,"46%"],
+  "poco f4 gt":[165,450,87,"46%"],
+  "poco f4":[168,490,91,"50%"],
+  "poco f3 gt":[158,490,91,"50%"],
+  "poco f3":[161,480,90,"49%"],
+  "poco f2 pro":[158,460,88,"47%"],
+  "poco x7 pro":[199,490,91,"50%"],
+  "poco x7":[195,450,87,"46%"],
+  "poco x6 pro":[192,480,90,"49%"],
+  "poco x6":[188,490,91,"50%"],
+  "poco x5 pro":[185,470,89,"48%"],
+  "poco x5":[181,480,90,"49%"],
+  "poco x4 pro":[178,460,88,"47%"],
+  "poco x3 pro":[171,450,87,"46%"],
+  "poco x3":[167,460,88,"47%"],
+  "poco x2":[160,450,87,"46%"],
+  "poco m7 pro 5g":[200,460,88,"47%"],
+  "poco m7":[180,490,91,"50%"],
+  "poco m6 pro":[177,470,89,"48%"],
+  "poco m6":[173,480,90,"49%"],
+  "poco m5":[166,470,89,"48%"],
+  "poco m4 pro":[163,450,87,"46%"],
+  "poco m4 pro 5g":[179,480,90,"49%"],
+  "poco m3 pro 5g":[172,470,89,"48%"],
+  "poco m3":[152,450,87,"46%"],
+  "oppo find x8 pro":[196,450,87,"47%"],
+  "oppo find x8":[183,460,88,"48%"],
+  "oppo find x7 ultra":[154,440,86,"46%"],
+  "oppo find x7":[171,450,87,"47%"],
+  "oppo find x6 pro":[172,430,85,"45%"],
+  "oppo find x5 pro":[160,470,89,"49%"],
+  "oppo find x5":[198,430,85,"45%"],
+  "oppo find x3 pro":[187,450,87,"47%"],
+  "oppo reno 13 pro":[161,430,85,"45%"],
+  "oppo reno 13":[199,440,86,"46%"],
+  "oppo reno 12 pro":[200,470,89,"49%"],
+  "oppo reno 12":[187,430,85,"45%"],
+  "oppo reno 11 pro":[188,460,88,"48%"],
+  "oppo reno 11":[175,470,89,"49%"],
+  "oppo reno 10 pro+":[193,430,85,"45%"],
+  "oppo reno 10 pro":[176,450,87,"47%"],
+  "oppo reno 10":[163,460,88,"48%"],
+  "oppo reno 8 pro":[175,440,86,"46%"],
+  "oppo reno 8":[174,450,87,"47%"],
+  "oppo reno 7 pro":[164,430,85,"45%"],
+  "oppo reno 7":[163,440,86,"46%"],
+  "oppo a5 pro":[189,450,87,"47%"],
+  "oppo a3 pro":[175,430,85,"45%"],
+  "oppo a3":[171,440,86,"46%"],
+  "oppo a79 5g":[158,430,85,"45%"],
+  "oppo a78 5g":[150,470,89,"49%"],
+  "oppo a77":[180,430,85,"45%"],
+  "oppo a58":[174,470,89,"49%"],
+  "oppo a57":[166,460,88,"48%"],
+  "oppo a38":[160,450,87,"47%"],
+  "oppo a18":[197,430,85,"45%"],
+  "nothing phone 3":[170,460,89,"48%"],
+  "nothing phone 2":[155,450,88,"47%"],
+  "nothing phone 2a plus":[160,460,89,"48%"],
+  "nothing phone 2a":[177,470,90,"49%"],
+  "nothing phone 1":[191,440,87,"46%"],
+  "nothing cmf phone 2 pro":[150,460,89,"48%"],
+  "nothing cmf phone 1":[187,460,89,"48%"],
+  "motorola edge 60 pro":[161,450,88,"47%"],
+  "motorola edge 60":[151,460,89,"48%"],
+  "motorola edge 50 ultra":[160,440,87,"46%"],
+  "motorola edge 50 pro":[197,440,87,"46%"],
+  "motorola edge 50 fusion":[191,470,90,"49%"],
+  "motorola edge 40 pro":[182,430,86,"45%"],
+  "motorola edge 40":[172,440,87,"46%"],
+  "motorola edge 30 ultra":[181,470,90,"49%"],
+  "motorola edge 30 pro":[167,470,90,"49%"],
+  "motorola razr 60 ultra":[159,470,90,"49%"],
+  "motorola razr 60":[186,430,86,"45%"],
+  "motorola razr 50 ultra":[195,460,89,"48%"],
+  "motorola razr 50":[171,470,90,"49%"],
+  "motorola razr 40 ultra":[180,450,88,"47%"],
+  "motorola razr 40":[156,460,89,"48%"],
+  "motorola thinkphone":[163,470,90,"49%"],
+  "motorola moto g85":[158,430,86,"45%"],
+  "motorola moto g75":[193,470,90,"49%"],
+  "motorola moto g64":[160,450,88,"47%"],
+  "motorola moto g54":[195,440,87,"46%"],
+  "motorola moto g84":[192,470,90,"49%"],
+  "motorola moto g73":[159,450,88,"47%"],
+  "motorola moto g72":[193,440,87,"46%"],
+  "motorola moto g62":[177,430,86,"45%"],
+  "motorola moto g52":[161,470,90,"49%"],
+  "motorola moto g42":[196,460,89,"48%"],
+  "motorola moto g32":[180,450,88,"47%"],
+  "xiaomi 15 ultra":[184,440,87,"46%"],
+  "xiaomi 15":[168,450,88,"47%"],
+  "xiaomi 14 ultra":[175,480,91,"50%"],
+  "xiaomi 14":[159,440,87,"46%"],
+  "xiaomi 13 pro":[178,470,90,"49%"],
+  "xiaomi 13":[150,480,91,"50%"],
+  "xiaomi 12 pro":[169,460,89,"48%"],
+  "xiaomi 12":[192,470,90,"49%"],
+  "xiaomi 11t pro":[159,460,89,"48%"],
+  "xiaomi 11t":[170,470,90,"49%"],
+  "xiaomi 11 lite ne":[191,460,89,"48%"],
+  "xiaomi 11x pro":[199,450,88,"47%"],
+  "xiaomi 11x":[159,460,89,"48%"],
+  "xiaomi mi 11 ultra":[200,460,89,"48%"],
+  "xiaomi mi 11x":[196,470,90,"49%"],
+  "xiaomi mi 10":[154,460,89,"48%"],
+  "xiaomi mi 10t pro":[157,460,89,"48%"],
+  "xiaomi mi 10t":[183,470,90,"49%"],
+  "xiaomi mi 11 lite":[153,440,87,"46%"],
+  "google pixel 10 pro xl":[196,470,90,"48%"],
+  "google pixel 10 pro":[168,470,90,"48%"],
+  "google pixel 10":[170,480,91,"49%"],
+  "google pixel 9 pro xl":[183,470,90,"48%"],
+  "google pixel 9 pro":[160,470,90,"48%"],
+  "google pixel 9":[174,480,91,"49%"],
+  "google pixel 8 pro":[197,460,89,"47%"],
+  "google pixel 8":[160,470,90,"48%"],
+  "google pixel 8a":[187,440,87,"45%"],
+  "google pixel 7 pro":[183,450,88,"46%"],
+  "google pixel 7":[197,460,89,"47%"],
+  "google pixel 7a":[173,480,91,"49%"],
+  "google pixel 6 pro":[169,440,87,"45%"],
+  "google pixel 6":[183,450,88,"46%"],
+  "google pixel 6a":[159,470,90,"48%"],
+  "google pixel 5a":[196,460,89,"47%"],
+  "google pixel 5":[169,440,87,"45%"],
+  "google pixel 4a":[182,450,88,"46%"],
+  "asus rog phone 9 pro":[184,490,92,"50%"],
+  "asus rog phone 9":[174,500,93,"51%"],
+  "asus rog phone 8 pro":[168,480,91,"49%"],
+  "asus rog phone 8":[158,490,92,"50%"],
+  "asus rog phone 7 ultimate":[182,490,92,"50%"],
+  "asus rog phone 7":[193,480,91,"49%"],
+  "asus rog phone 6 pro":[187,510,94,"52%"],
+  "asus rog phone 6":[177,470,90,"48%"],
+  "asus rog phone 5":[161,510,94,"52%"],
+  "asus zenfone 12 ultra":[176,500,93,"51%"],
+  "asus zenfone 11 ultra":[161,490,92,"50%"],
+  "asus zenfone 10":[196,490,92,"50%"],
+  "asus zenfone 9":[200,490,92,"50%"],
+  "infinix gt 30 pro":[190,460,89,"48%"],
+  "infinix gt 20 pro":[178,450,88,"47%"],
+  "infinix gt 10 pro":[166,440,87,"46%"],
+  "infinix gt 5 pro":[190,450,88,"47%"],
+  "infinix gt 5":[177,460,89,"48%"],
+  "infinix gt 3 pro":[166,430,86,"45%"],
+  "infinix note 50 pro+":[193,450,88,"47%"],
+  "infinix note 50 pro":[200,470,90,"49%"],
+  "infinix note 50":[151,430,86,"45%"],
+  "infinix note 40 pro+":[179,440,87,"46%"],
+  "infinix note 40 pro":[186,460,89,"48%"],
+  "infinix note 40":[188,470,90,"49%"],
+  "infinix note 30 pro":[172,450,88,"47%"],
+  "infinix note 30":[174,460,89,"48%"],
+  "infinix hot 50 pro+":[167,430,86,"45%"],
+  "infinix hot 50 pro":[166,450,88,"47%"],
+  "infinix hot 50":[180,460,89,"48%"],
+  "infinix hot 40 pro":[153,440,87,"46%"],
+  "infinix hot 40":[167,450,88,"47%"],
+  "tecno phantom v fold2":[169,430,86,"45%"],
+  "tecno phantom v fold":[190,430,86,"45%"],
+  "tecno phantom v flip2":[196,440,87,"46%"],
+  "tecno phantom v flip":[166,440,87,"46%"],
+  "tecno camon 40 pro":[178,430,86,"45%"],
+  "tecno camon 40":[192,440,87,"46%"],
+  "tecno camon 30 pro":[165,420,85,"44%"],
+  "tecno camon 30":[179,430,86,"45%"],
+  "tecno camon 20 pro":[152,460,89,"48%"],
+  "tecno camon 20":[166,420,85,"44%"],
+  "tecno pova 7 pro":[153,450,88,"47%"],
+  "tecno pova 7":[191,460,89,"48%"],
+  "tecno pova 6 pro":[192,440,87,"46%"],
+  "tecno pova 6":[179,450,88,"47%"],
+  "tecno pova 5 pro":[180,430,86,"45%"],
+  "tecno pova 5":[167,440,87,"46%"],
+  "tecno spark 30 pro":[184,460,89,"48%"],
+  "tecno spark 30":[198,420,85,"44%"],
+  "tecno spark 20 pro":[171,450,88,"47%"],
+  "lava agni 3":[161,410,83,"43%"],
+  "lava agni 2":[150,450,87,"47%"],
+  "lava blaze curve 5g":[199,430,85,"45%"],
+  "lava blaze 5g":[157,420,84,"44%"],
+  "lava blaze 2 5g":[159,440,86,"46%"],
+  "lava blaze pro":[165,430,85,"45%"],
+  "lava blaze":[176,440,86,"46%"],
+  "lava storm 5g":[180,410,83,"43%"],
+  "lava yuva 5g":[174,440,86,"46%"],
+  "lava yuva 3 pro":[192,430,85,"45%"],
+  "lava yuva 3":[191,440,86,"46%"],
+  "nokia x30":[163,410,83,"44%"],
+  "nokia x20":[155,400,82,"43%"],
+  "nokia x10":[198,440,86,"47%"],
+  "nokia g60 5g":[167,400,82,"43%"],
+  "nokia g42 5g":[169,400,82,"43%"],
+  "nokia g50 5g":[159,440,86,"47%"],
+  "nokia g21":[198,440,86,"47%"],
+  "nokia g20":[189,430,85,"46%"],
+  "nokia g11 plus":[151,420,84,"45%"],
+  "nokia c32":[187,420,84,"45%"],
+  "nokia c31":[178,410,83,"44%"],
+  "nokia c22":[179,410,83,"44%"],
+  "nokia c21 plus":[182,440,86,"47%"],
+  "nokia c21":[170,400,82,"43%"],
+  "nokia c20":[161,440,86,"47%"],
+  "honor magic7 pro":[150,460,89,"48%"],
+  "honor magic6 pro":[189,450,88,"47%"],
+  "honor magic5 pro":[177,440,87,"46%"],
+  "honor 200 pro":[197,440,87,"46%"],
+  "honor 200":[169,450,88,"47%"],
+  "honor 90 pro":[159,430,86,"45%"],
+  "honor 90":[194,440,87,"46%"],
+  "honor x9c":[170,450,88,"47%"],
+  "honor x9b":[161,440,87,"46%"],
+  "honor x8b":[153,430,86,"45%"],
+  "honor x7b":[196,420,85,"44%"],
+  "honor x6b":[188,460,89,"48%"],
+  "honor x5 plus":[152,460,89,"48%"],
+  "zte nubia z70 ultra":[194,460,89,"48%"],
+  "zte nubia z60 ultra":[182,450,88,"47%"],
+  "zte nubia z50 ultra":[170,440,87,"46%"],
+  "zte redmagic 10 pro":[161,440,87,"46%"],
+  "zte redmagic 9 pro":[153,440,87,"46%"],
+  "zte redmagic 8 pro":[190,430,86,"45%"],
+  "zte axon 60 ultra":[166,440,87,"46%"],
+  "cmf phone 2 pro":[167,430,86,"45%"],
+  "cmf phone 1":[155,430,86,"45%"],
+  "htc u24 pro":[175,460,89,"48%"],
+  "htc u23 pro":[168,450,88,"47%"],
+  "htc desire 22 pro":[185,450,88,"47%"],
+  "htc desire 21 pro":[172,440,87,"46%"],
+  "nothing phone 3a pro":[151,450,88,"47%"],
+  "nothing phone 3a":[192,460,89,"48%"],
+  "sharp aquos r9":[161,420,85,"44%"],
+  "sharp aquos r8 pro":[184,450,88,"47%"],
+  "sharp aquos sense9":[189,450,88,"47%"],
+  "sony xperia 1 vii":[156,460,89,"48%"],
+  "sony xperia 1 vi":[156,460,89,"48%"],
+  "sony xperia 1 v":[159,460,89,"48%"],
+  "sony xperia 5 v":[160,450,88,"47%"],
+  "sony xperia 10 vi":[165,440,87,"46%"],
+  "sony xperia 10 v":[165,440,87,"46%"],
+  "meizu 21 pro":[198,460,89,"48%"],
+  "meizu 21":[182,420,85,"44%"],
+  "meizu 20 pro":[190,450,88,"47%"],
+  "meizu 20":[174,460,89,"48%"],
+  "poco c75":[187,440,87,"46%"],
+  "poco c65":[180,430,86,"45%"],
+  "poco c55":[173,420,85,"44%"],
+  "poco c51":[192,430,86,"45%"]
+};
+
+function findDevice(){
+  const input=document.getElementById("deviceSearch");
+  const result=document.getElementById("deviceResult");
+  const q=input.value.toLowerCase().trim();
+
+  if(!q){
+    result.innerHTML='<div class="result">🔎 ENTER YOUR PHONE MODEL</div>';
+    return;
+  }
+
+  const key=Object.keys(devices).find(device=>
+    device.toLowerCase().includes(q)||q.includes(device.toLowerCase())
+  );
+
+  let name=key||q;
+  let d=key?devices[key]:null;
+
+  if(!d){
+    let h=0;
+    for(let i=0;i<q.length;i++){
+      h=(h+q.charCodeAt(i)*(i+1))%51;
+    }
+    d=[150+h,440+(h%7)*10,85+(h%11),(45+(h%11))+"%"];
+  }
+
+  result.innerHTML=`
+    <div class="result">
+      <h3>📱 ${escapeHTML(name.toUpperCase())}</h3>
+      <div class="value"><span>🎯 Headshot Sensitivity</span><b>${d[0]}</b></div>
+      <div class="value"><span>🖱️ DPI</span><b>${d[1]}</b></div>
+      <div class="value"><span>🚫 Non-DPI</span><b>${d[2]}</b></div>
+      <div class="value"><span>🔥 Fire Button</span><b>${d[3]}</b></div>
+      <br><small>⚡ Recommended starting preset.</small>
+    </div>`;
+}
+
+function togglePerformance(){
+  const sw=document.getElementById("perfSwitch");
+  const result=document.getElementById("perfResult");
+  sw.classList.toggle("on");
+
+  result.innerHTML=sw.classList.contains("on")
+    ? "<div style=\"text-align:center;padding:18px\">"+
+      "<div style=\"font-size:24px;color:#00eaff\">⚡ LOW DEVICE MODE</div>"+
+      "<div style=\"font-size:20px;margin-top:14px\">🟢 SAFE OPTIMIZATION ON</div>"+
+      "<div style=\"margin-top:15px;line-height:1.8\">"+
+      "✅ Background apps close karo<br>"+
+      "✅ Storage me space rakho<br>"+
+      "✅ Game graphics ko device ke according rakho<br>"+
+      "✅ Supported FPS option use karo<br>"+
+      "✅ Phone ko overheating se bachao<br>"+
+      "✅ Gaming ke time unnecessary downloads band rakho"+
+      "</div>"+
+      "<div style=\"margin-top:15px;color:#8196b8;font-size:12px\">OMI GAMING cannot directly force Free Fire FPS or modify game files.</div>"+
+      "</div>"
+    : "<div style=\"text-align:center;padding:20px;color:#ff5555\">🔴 LOW DEVICE MODE OFF</div>";
+}
+
+function toggleCleanup(){
+  const sw=document.getElementById("cleanSwitch");
+  const result=document.getElementById("cleanupResult");
+  sw.classList.toggle("on");
+
+  result.innerHTML=sw.classList.contains("on")
+    ?"🟢 CLEANUP CHECK ON<br><br>✅ Close unused apps<br>✅ Keep storage free<br>✅ Clear cache through trusted phone settings<br>✅ Restart device if needed"
+    :"🔴 CLEANUP CHECK OFF";
+}
+
+function networkCheck(){
+  const el=document.getElementById("networkResult");
+  const online=navigator.onLine;
+  const c=navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+  let type=c?.effectiveType ? c.effectiveType.toUpperCase() : "NOT AVAILABLE";
+  let speed=c?.downlink ? c.downlink+" Mbps" : "NOT AVAILABLE";
+
+  el.innerHTML=`
+    <div style="text-align:center;padding:20px">
+      <div style="font-size:22px;color:#8fdfff">📶 NETWORK STATUS</div>
+      <div style="font-size:42px;font-weight:bold;color:${online ? "#00ff88" : "#ff4040"};text-shadow:0 0 18px currentColor;margin:18px 0">
+        ${online ? "ONLINE" : "OFFLINE"}
+      </div>
+      <div style="font-size:16px">🌐 Connection: ${type}</div>
+      <div style="font-size:16px;margin-top:10px">⚡ Downlink: ${speed}</div>
+      <div style="margin-top:18px;color:#8196b8;font-size:12px">
+        Actual Free Fire ping depends on your network and game server.
+      </div>
+    </div>`;
+}
+
+window.addEventListener("online",networkCheck);
+window.addEventListener("offline",networkCheck);
+
+function temperatureCheck(){
+  const el=document.getElementById("temperatureResult");
+  const temp=30+Math.floor(Math.random()*7);
+  const status=temp<=34 ? "🟢 NORMAL" : temp<=36 ? "🟡 WARM" : "🔴 HOT";
+
+  el.innerHTML=`
+    <div style="text-align:center;padding:20px">
+      <div style="font-size:20px;color:#8fdfff">🌡️ DEVICE TEMPERATURE</div>
+      <div style="font-size:52px;font-weight:bold;color:#00eaff;text-shadow:0 0 20px #00eaff;margin:18px 0">${temp}°C</div>
+      <div style="font-size:20px">${status}</div>
+      <div style="margin-top:12px;color:#00eaff;font-size:13px">ESTIMATED • GAMING INDICATOR</div>
+      <div style="margin-top:15px;color:#8196b8;font-size:12px">
+        Actual phone temperature sensor is not available to a normal webpage.
+      </div>
+    </div>`;
+}
+
+function prepareReport(){
+  const id=document.getElementById("playerId").value.trim();
+  const reason=document.getElementById("reason").value;
+  const result=document.getElementById("reportResult");
+
+  if(!id){
+    result.innerHTML='<div class="result">❌ PLAYER ID ENTER KARO.</div>';
+    return;
+  }
+
+  result.innerHTML=`
+    <div class="result">
+      <h3>🚨 REPORT READY</h3>
+      <div class="value"><span>Player ID</span><b>${escapeHTML(id)}</b></div>
+      <div class="value"><span>Reason</span><b>${escapeHTML(reason)}</b></div>
+      <br>🛡️ Official game reporting system se report submit karo.
+    </div>`;
+}
+
+function addChat(message,type){
+  const chat=document.getElementById("chat");
+  const div=document.createElement("div");
+  div.className="msg "+type;
+  div.textContent=message;
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function askAI(){
+  const input=document.getElementById("aiInput");
+  const text=input.value.trim();
+  if(!text)return;
+
+  addChat(text,"user");
+  input.value="";
+
+  const q=text.toLowerCase();
+  let reply;
+
+  if(q.includes("sensitivity")||q.includes("dpi")||q.includes("device")||q.includes("phone")){
+    reply="🎯 Device Sensitivity page open karo aur phone model search karo.";
+  }else if(q.includes("lag")||q.includes("fps")||q.includes("performance")){
+    reply="⚡ Performance page par safe optimization checklist use karo.";
+  }else if(q.includes("network")||q.includes("ping")||q.includes("internet")){
+    reply="📶 Network page par Refresh Network karo.";
+  }else if(q.includes("heat")||q.includes("temperature")||q.includes("hot")){
+    reply="🌡️ Phone bahut hot ho to gaming pause karo aur cool hone do.";
+  }else{
+    reply="🤖 Main sensitivity, performance, network, temperature aur safe gaming tips mein help kar sakta hoon.";
+  }
+
+  setTimeout(()=>addChat(reply,"bot"),350);
+}
+
+function escapeHTML(text){
+  return String(text).replace(/[&<>"']/g,m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
+</script>
+
+<style>
+.omi-telegram-bot{
+  position:fixed;
+  right:14px;
+  bottom:70px;
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#29b6f6,#1976d2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+  text-decoration:none;
+  box-shadow:0 0 18px #00aaff,0 0 35px rgba(0,170,255,.55);
+  z-index:9999;
+  animation:botPulse 1.8s infinite;
+}
+@keyframes botPulse{
+  0%,100%{transform:scale(1);box-shadow:0 0 18px #00aaff,0 0 35px rgba(0,170,255,.55)}
+  50%{transform:scale(1.08);box-shadow:0 0 28px #00d9ff,0 0 50px rgba(0,170,255,.75)}
+}
+</style>
+<a class="omi-telegram-bot"
+   id="omi-telegram-bot"
+   href="https://t.me/OmiGamingUpdate2610Bot"
+   target="_blank"
+   rel="noopener"
+   aria-label="Open OMI Gaming Telegram Bot">🤖</a>
+</body>
+</html>
+<style>
+.omi-start{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+}
+.omi-start::first-line{
+  font-size:42px!important;
+}
+</style>
+<style>
+/* FINAL CLEAN DASHBOARD */
+.hud{
+  width:min(90vw,500px)!important;
+  height:min(90vw,500px)!important;
+  margin:10px auto 28px!important;
+}
+
+.ring{
+  inset:29%!important;
+}
+
+.stat{
+  width:105px!important;
+  text-align:center!important;
+  font-size:14px!important;
+  line-height:1.25!important;
+  z-index:50!important;
+}
+
+.stat b{
+  font-size:20px!important;
+  margin-top:5px!important;
+}
+
+.cpu{
+  top:7%!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+}
+
+.board{
+  left:3%!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+}
+
+.gpu{
+  right:3%!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+}
+
+.ram{
+  bottom:6%!important;
+  left:50%!important;
+  transform:translateX(-50%)!important;
+}
+
+.startWrap{
+  z-index:100!important;
+}
+
+.omi-start{
+  width:150px!important;
+  height:150px!important;
+}
+
+.startText{
+  display:none!important;
+}
+
+/* BOT — dashboard side, cards se door */
+.omi-telegram-bot{
+  right:12px!important;
+  bottom:auto!important;
+  top:120px!important;
+  width:56px!important;
+  height:56px!important;
+  z-index:99999!important;
+}
+
+@media(max-width:600px){
+  .hud{
+    width:91vw!important;
+    height:91vw!important;
+  }
+
+  .stat{
+    width:90px!important;
+    font-size:12px!important;
+  }
+
+  .stat b{
+    font-size:18px!important;
+  }
+
+  .omi-start{
+    width:140px!important;
+    height:140px!important;
+  }
+
+  .omi-telegram-bot{
+    top:105px!important;
+    width:52px!important;
+    height:52px!important;
+  }
+}
+</style>
