@@ -692,8 +692,8 @@ canvas{will-change:auto}
 <div class="activateText" id="activateText">⚡ GAMING MODE ACTIVATED ⚡</div>
 
 <script>
-const USERNAME="Omi_gaming";
-const PASSWORD="omi_1234_5";
+const USERNAME="omi123";
+const PASSWORD="omi123";
 
 let attempts=0;
 let locked=false;
@@ -1496,6 +1496,45 @@ function escapeHTML(text){
    target="_blank"
    rel="noopener"
    aria-label="Open OMI Gaming Telegram Bot">🤖</a>
+<script>
+document.addEventListener("click",function(e){
+  if(e.target && e.target.textContent.trim().toUpperCase()==="START"){
+    const c=new (window.AudioContext||window.webkitAudioContext)();
+    const o=c.createOscillator(),g=c.createGain();
+    o.type="sawtooth";
+    o.frequency.setValueAtTime(180,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(700,c.currentTime+.12);
+    g.gain.setValueAtTime(.001,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.18,c.currentTime+.02);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.28);
+    o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.28);
+  }
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script id="omi-game-launch">
+function openInstalledGame(){
+  const ff="intent://#Intent;scheme=freefire;package=com.dts.freefireth;end";
+  const max="intent://#Intent;scheme=freefiremax;package=com.dts.freefiremax;end";
+  window.location.href=ff;
+  setTimeout(()=>{ window.location.href=max; },1500);
+}
+</script>
+
 </body>
 </html>
 <style>
