@@ -780,11 +780,14 @@ function startGaming(){
 }
 
 function openGame(){
-  location.href="intent://#Intent;scheme=freefire;package=com.dts.freefireth;end";
+    const ff = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.dts.freefireth;end";
+    const max = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.dts.freefiremax;end";
 
-  setTimeout(()=>{
-    alert("🎮 If Free Fire did not open, launch it from your phone.");
-  },1200);
+    window.location.href = ff;
+
+    setTimeout(() => {
+        window.location.href = max;
+    }, 1500);
 }
 
 function clearGame(){
