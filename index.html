@@ -780,14 +780,14 @@ function startGaming(){
 }
 
 function openGame(){
-    const ff = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.dts.freefireth;end";
-    const max = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.dts.freefiremax;end";
+    const ff = "intent://#Intent;package=com.dts.freefireth;end";
+    const max = "intent://#Intent;package=com.dts.freefiremax;end";
 
     window.location.href = ff;
 
     setTimeout(() => {
         window.location.href = max;
-    }, 1500);
+    }, 2000);
 }
 
 function clearGame(){
